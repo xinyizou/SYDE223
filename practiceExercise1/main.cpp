@@ -101,13 +101,10 @@ public:
     Playlist shuffle_songs() {
 
         vector<int> new_order;
-        Playlist shuffled_playlist();
+        Playlist shuffled_playlist;
 
-
-
-        for(int i=0; new_order.size() <= my_playlist.size(); i++ ) {
-            int random = ( rand() % my_playlist.size());
-
+        for(int i=0; new_order.size() < my_playlist.size(); i++ ) {
+            int random = rand() % my_playlist.size();
 
             if(is_random(random, new_order)) {
                 new_order.push_back(random);
@@ -115,14 +112,12 @@ public:
         }
 
         for(vector<int>::iterator my_it = new_order.begin(); my_it != new_order.end(); ++my_it) {
-            shuffled_playlist().insert_song(my_playlist[*my_it]);
+            shuffled_playlist.insert_song(my_playlist[*my_it]);
         }
 
-        return shuffled_playlist();
+        return shuffled_playlist;
+    }
 
-
-
-    };
 private:
     bool is_valid(vector<Song>& my_playlist, Song& song_info) {
         int artist_count = 0;
@@ -131,11 +126,11 @@ private:
             if (*my_it == song_info) {
                 is_valid = false;
             }
-            if (*my_it == song_info.get_artist()) {
+            if (my_it->get_artist() == song_info.get_artist()) { //TODO: Research get_artist and pointer iterator stuff
                 artist_count += 1;
             }
             if (artist_count >= 3) {
-                return false;
+                is_valid = false;
             }
         }
         return is_valid;
@@ -149,13 +144,8 @@ private:
                 is_random = false;
             }
         }
-
         return is_random;
     }
-
-
-
-
 };
 
 //TODO: ask about implicit constructor
