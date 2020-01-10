@@ -2,26 +2,41 @@
 // Created by Yonael Miheret Debebe on 2020-01-10.
 //
 
-#include "main.hpp"
-
 #include <iostream>
-using namespace std
+#include <vector>
+using namespace std;
 
 class Music {
-    string artist_name;
+    string artist_name, music_id;
     unsigned int year;
-    string music_id;
 
 public:
+    Music() {
+        artist_name = "";
+        music_id = "";
+        year = 0;
+    }
 
-    Music();
+    Music(string new_artist_name, string new_music_id, unsigned int new_year) {
+        artist_name = new_artist_name;
+        music_id = new_music_id;
+        year = new_year;
+    }
 
-    Music(string new_artist_name, unsigned int new_year, string new_music_id);
+    bool operator == (Music& target) const {
+        if (artist_name == target.artist_name && music_id == target.music_id && year == target.year) {
+            return true;
+        }
 
-    bool operator == (Music& target) const;
+        else {
+            return false;
+        }
+    }
 
     //TODO: look up constant member function and constant parameters
-    string get_artist();
+    string get_artist() {
+        return artist_name;
+    }
 };
 
 class Song : public Music {
