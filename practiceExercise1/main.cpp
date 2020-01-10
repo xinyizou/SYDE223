@@ -147,7 +147,11 @@ private:
 //TODO: ask about implicit constructor
 
 Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
-
+    vector<Song> combined_playlist;
+    combined_playlist.insert(combined_playlist.end(), playlist1.my_playlist.begin(), playlist1.my_playlist.end());
+    combined_playlist.insert(combined_playlist.end(), playlist2.my_playlist.begin(), playlist2.my_playlist.end());
+//TODO: ask if using insert is ok if not use a for loop to popback each element of second vector
+    return combined_playlist;
 }
 
 
