@@ -2,6 +2,7 @@
 // Created by Yonael Miheret Debebe on 2020-01-10.
 //
 
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -45,13 +46,42 @@ class Song : public Music {
     unsigned int song_length;
 
 public:
-    Song();
+    Song() {
+        genre = "";
+        song_name = "";
+        song_length = 0;
+    };
 
-    Song(string new_artist_name, unsigned int new_year, string new_music_id, string new_genre, string new_song_name, unsigned int new_song_length);
+    Song(string new_artist_name, unsigned int new_year, string new_music_id, string new_genre, string new_song_name, unsigned int new_song_length) {
+        Music(new_artist_name,  new_year, new_music_id);
+        genre = new_genre;
+        song_name = new_song_name;
+        song_length = new_song_length;
+    };
 
-    bool operator == (Song& target) const;
+    bool operator == (Song& target) const {
 
-    string get_genre();
+        bool are_equal = false;
+
+
+       are_equal = static_cast<Music>(target) == static_cast<Music>(*this);
+       are_equal = are_equal && genre == target.get_genre();
+       are_equal = are_equal && song_name == target.get_song_name();
+       are_equal = are_equal && song_length == target.get_song_length();
+
+        return are_equal;
+    };
+
+    string get_genre() {
+        return genre;
+    };
+    string get_song_name() {
+        return  song_name;
+    };
+
+    unsigned int get_song_length() {
+        return song_length;
+    };
 };
 
 
@@ -99,5 +129,5 @@ private:
 //TODO: ask about implicit constructor
 
 
-#endif //TEST_MAIN_HPP
+int main ();
 
