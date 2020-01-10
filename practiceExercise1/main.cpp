@@ -1,10 +1,7 @@
-//
-// Created by Yonael Miheret Debebe on 2020-01-10.
-//
-
-
 #include <iostream>
+#include <string>
 #include <vector>
+#include <time.h>
 using namespace std;
 
 class Music {
@@ -24,14 +21,19 @@ public:
         year = new_year;
     }
 
-    bool operator == (Music& target) const {
-        if (artist_name == target.artist_name && music_id == target.music_id && year == target.year) {
-            return true;
-        }
-
-        else {
-            return false;
-        }
+    bool operator==(const Music& target) {
+//        if (artist_name == target.artist_name && music_id == target.music_id && year == target.year) {
+//            return true;
+//        }
+//
+//        else {
+//            return false;
+//        }
+        bool is_same = true;
+        is_same = is_same && (artist_name == target.artist_name);
+        is_same = is_same && (music_id == target.music_id);
+        is_same = is_same && (year == target.year);
+        return is_same;
     }
 
     //TODO: look up constant member function and constant parameters
@@ -53,18 +55,16 @@ public:
     };
 
     Song(string new_artist_name, unsigned int new_year, string new_music_id, string new_genre, string new_song_name, unsigned int new_song_length) {
-        Music(new_artist_name,  new_year, new_music_id);
+        Music(new_artist_name, new_music_id, new_year);
         genre = new_genre;
         song_name = new_song_name;
         song_length = new_song_length;
     };
 
-    bool operator == (Song& target) const {
-
-        bool are_equal = false;
-
-
-       are_equal = static_cast<Music>(target) == static_cast<Music>(*this);
+    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
+        bool are_equal = true;
+        are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
+//       are_equal = static_cast<Music>(target) == static_cast<Music>(*this);
        are_equal = are_equal && genre == target.get_genre();
        are_equal = are_equal && song_name == target.get_song_name();
        are_equal = are_equal && song_length == target.get_song_length();
@@ -76,9 +76,8 @@ public:
         return genre;
     };
     string get_song_name() {
-        return  song_name;
+        return song_name;
     };
-
     unsigned int get_song_length() {
         return song_length;
     };
@@ -96,7 +95,7 @@ public:
     Playlist(vector<Song> new_playlist) : my_playlist(new_playlist) {}
 
     bool insert_song (Song& song_info) {
-        if (is_valid()) {
+        if (is_valid(my_playlist, song_info)) {
             my_playlist.push_back(song_info);
             return true;
         }
@@ -107,19 +106,21 @@ public:
     }
 
 private:
-    bool is_valid() {
+    bool is_valid(vector<Song>& my_playlist, Song& song_info) {
         int artist_count = 0;
-        for (vector<Song>::iterator my_iterator = my_playlist.begin(); my_iterator != my_playlist.end(); ++ my_iterator) {
-            if (my_iterator == song_info) {
-                return false;
+        bool is_valid = true;
+        for (vector<Song>::iterator my_iterator = my_playlist.begin(); my_iterator != my_playlist.end() && is_valid; ++ my_iterator) {
+            if (*my_iterator == song_info) {
+                is_valid = false;
             }
-            if (my_iterator.get_artist() == song_info.get_artist()) {
+            if (my_iterator->get_artist() == song_info.get_artist()) {
                 artist_count += 1;
             }
             if (artist_count >= 3) {
                 return false;
             }
         }
+        return is_valid;
     }
     Playlist shuffle_songs();
 
@@ -128,6 +129,13 @@ private:
 
 //TODO: ask about implicit constructor
 
+Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
 
-int main ();
+}
+
+
+int main () {
+    srand(time(0));
+    return 0;
+};
 
