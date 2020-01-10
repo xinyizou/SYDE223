@@ -5,7 +5,8 @@
 using namespace std;
 
 class Music {
-    string artist_name, music_id;
+    string artist_name;
+    string music_id;
     unsigned int year;
 
 public:
@@ -22,13 +23,6 @@ public:
     }
 
     bool operator==(const Music& target) {
-//        if (artist_name == target.artist_name && music_id == target.music_id && year == target.year) {
-//            return true;
-//        }
-//
-//        else {
-//            return false;
-//        }
         bool is_same = true;
         is_same = is_same && (artist_name == target.artist_name);
         is_same = is_same && (music_id == target.music_id);
@@ -52,35 +46,34 @@ public:
         genre = "";
         song_name = "";
         song_length = 0;
-    };
+    }
 
     Song(string new_artist_name, unsigned int new_year, string new_music_id, string new_genre, string new_song_name, unsigned int new_song_length) {
         Music(new_artist_name, new_music_id, new_year);
         genre = new_genre;
         song_name = new_song_name;
         song_length = new_song_length;
-    };
+    }
 
-    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
-        bool are_equal = true;
-        are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
-//       are_equal = static_cast<Music>(target) == static_cast<Music>(*this);
+    bool operator==( Song& target) { //TODO: how do we implement const in an overloaded operator
+       bool are_equal = true;
+       are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
        are_equal = are_equal && genre == target.get_genre();
        are_equal = are_equal && song_name == target.get_song_name();
        are_equal = are_equal && song_length == target.get_song_length();
 
         return are_equal;
-    };
+    }
 
     string get_genre() {
         return genre;
-    };
+    }
     string get_song_name() {
         return song_name;
-    };
+    }
     unsigned int get_song_length() {
         return song_length;
-    };
+    }
 };
 
 
@@ -107,24 +100,38 @@ public:
 
     Playlist shuffle_songs() {
 
-    int random = ( rand() % my_playlist.size());
-    vector<int> existing_values;
-    Playlist shuffled_playlist();
+        vector<int> new_order;
+        Playlist shuffled_playlist();
 
-    if(is_random(random, existing_values)) {
 
-    }
+
+        for(int i=0; new_order.size() <= my_playlist.size(); i++ ) {
+            int random = ( rand() % my_playlist.size());
+
+
+            if(is_random(random, new_order)) {
+                new_order.push_back(random);
+            }
+        }
+
+        for(vector<int>::iterator my_it = new_order.begin(); my_it != new_order.end(); ++my_it) {
+            shuffled_playlist().insert_song(my_playlist[*my_it]);
+        }
+
+        return shuffled_playlist();
+
+
 
     };
 private:
     bool is_valid(vector<Song>& my_playlist, Song& song_info) {
         int artist_count = 0;
         bool is_valid = true;
-        for (vector<Song>::iterator my_iterator = my_playlist.begin(); my_iterator != my_playlist.end() && is_valid; ++ my_iterator) {
-            if (*my_iterator == song_info) {
+        for (vector<Song>::iterator my_it = my_playlist.begin(); my_it != my_playlist.end() && is_valid; ++ my_it) {
+            if (*my_it == song_info) {
                 is_valid = false;
             }
-            if (my_iterator->get_artist() == song_info.get_artist()) {
+            if (*my_it == song_info.get_artist()) {
                 artist_count += 1;
             }
             if (artist_count >= 3) {
@@ -137,6 +144,13 @@ private:
     bool is_random(int value, vector<int> existing_values) {
         bool is_random= true;
 
+        for(vector<int>::iterator my_it = existing_values.begin(); my_it != existing_values.end() && is_random; ++my_it) {
+            if (*my_it == value) {
+                is_random = false;
+            }
+        }
+
+        return is_random;
     }
 
 
