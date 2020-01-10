@@ -105,6 +105,17 @@ public:
 
     }
 
+    Playlist shuffle_songs() {
+
+    int random = ( rand() % my_playlist.size());
+    vector<int> existing_values;
+    Playlist shuffled_playlist();
+
+    if(is_random(random, existing_values)) {
+
+    }
+
+    };
 private:
     bool is_valid(vector<Song>& my_playlist, Song& song_info) {
         int artist_count = 0;
@@ -122,7 +133,13 @@ private:
         }
         return is_valid;
     }
-    Playlist shuffle_songs();
+
+    bool is_random(int value, vector<int> existing_values) {
+        bool is_random= true;
+
+    }
+
+
 
 
 };
