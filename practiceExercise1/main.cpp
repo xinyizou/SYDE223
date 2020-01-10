@@ -7,32 +7,55 @@
 #include <iostream>
 using namespace std
 
-class Music:
-        vars: string artist name, unsigned int year of made, string music
-        empty constructor: default year 0, all else empty string
-        parametric constructor
-        overloaded operator==
-public: string get_artist()
+class Music {
+    string artist_name;
+    unsigned int year;
+    string music_id;
 
-child class of music: Song:
-vars: string genre, string song name, unsigned int song length
-empty constructor, uint 0, empty strings
-parametric constructor
-overloaded operator==
-getter optional
+public:
 
-to use song instance as music, use static_cast<Music>(song_info) <-- this is probably for a comparison
+    Music();
+
+    Music(string new_artist_name, unsigned int new_year, string new_music_id);
+
+    bool operator == (Music& target) const;
+
+    //TODO: look up constant member function and constant parameters
+    string get_artist();
+};
+
+class Song : public Music {
+    string genre;
+    string song_name;
+    unsigned int song_length;
+
+public:
+    Song();
+
+    Song(string new_artist_name, unsigned int new_year, string new_music_id, string new_genre, string new_song_name, unsigned int new_song_length);
+
+    bool operator == (Song& target) const;
+
+    string get_genre();
+};
 
 
-class Playlist:
-        vars: vector of Song instances: vector<Song> my_playlist;
-        no explicit constructor
-        methods: bool insert_song(Song& song_info), Playlist shuffle_songs()
-        for insert_song method: no duplicate Songs, no more than 3 songs by same artist, returns true if succeeds in adding, false otherwise
-        for shuffle_songs method: returns a Playlist in random order
+class Playlist {
+    vector<Song> my_playlist;
 
-        randomization: srand(time(0))
+public:
+    friend Playlist operator+(const Playlist& playlist1, const Playlist& playlist2);
 
-overloaded operator+ as non-member friend function: combines 2 playlists and returns 1 Playlist instance with all Songs
+    Playlist () : my_playlist(vector<Song>){};
 
-class TestDriver: runs through all scenarios with assertions
+    bool insert_song (Song& song_info);
+    Playlist shuffle_songs();
+
+
+};
+
+//TODO: ask about implicit constructor
+
+
+#endif //TEST_MAIN_HPP
+
