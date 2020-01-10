@@ -61,9 +61,36 @@ class Playlist {
 public:
     friend Playlist operator+(const Playlist& playlist1, const Playlist& playlist2);
 
-    Playlist () : my_playlist(vector<Song>){};
+    Playlist () : my_playlist(vector<Song>()){}
 
-    bool insert_song (Song& song_info);
+    Playlist(vector<Song> new_playlist) : my_playlist(new_playlist) {}
+
+    bool insert_song (Song& song_info) {
+        if (is_valid()) {
+            my_playlist.push_back(song_info);
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+private:
+    bool is_valid() {
+        int artist_count = 0;
+        for (vector<Song>::iterator my_iterator = my_playlist.begin(); my_iterator != my_playlist.end(); ++ my_iterator) {
+            if (my_iterator == song_info) {
+                return false;
+            }
+            if (my_iterator.get_artist() == song_info.get_artist()) {
+                artist_count += 1;
+            }
+            if (artist_count >= 3) {
+                return false;
+            }
+        }
+    }
     Playlist shuffle_songs();
 
 
