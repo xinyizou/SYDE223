@@ -165,12 +165,6 @@ Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
     return combined_playlist;
 }
 
-
-int main () {
-    srand(time(0));
-    return 0;
-};
-
 class MusicTest {
     Music music;
     Music empty_music;
@@ -309,7 +303,7 @@ public:
 
     bool testConcatentation() {
         concat_playlist = playlist1 + playlist2;
-        assert(concat_playlist.my_playlist.size() == playlist1.my_playlist.size() + playlist2.my_playlist.size());
+        assert(concat_playlist.get_my_playlist().size() == playlist1.get_my_playlist().size() + playlist2.get_my_playlist().size());
         return true;
     }
 
