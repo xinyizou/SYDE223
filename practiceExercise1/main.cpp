@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <cassert>
 using namespace std;
 
 class Music {
@@ -34,6 +35,13 @@ public:
     string get_artist() {
         return artist_name;
     }
+
+    unsigned int get_year() {
+        return year;
+    }
+    string get_music_id() {
+        return music_id;
+    }
 };
 
 class Song : public Music {
@@ -43,6 +51,7 @@ class Song : public Music {
 
 public:
     Song() {
+        Music;
         genre = "";
         song_name = "";
         song_length = 0;
@@ -55,14 +64,14 @@ public:
         song_length = new_song_length;
     }
 
-    bool operator==( Song& target) { //TODO: how do we implement const in an overloaded operator
+    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
        bool are_equal = true;
        are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
        are_equal = are_equal && genre == target.get_genre();
        are_equal = are_equal && song_name == target.get_song_name();
        are_equal = are_equal && song_length == target.get_song_length();
 
-        return are_equal;
+       return are_equal;
     }
 
     string get_genre() {
@@ -164,3 +173,37 @@ int main () {
     return 0;
 };
 
+class SongTest {
+    Song test_empty_song;
+    Song test_song;
+
+public:
+    void setup() {
+        test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+    }
+
+    bool test_default_constructor() {
+        assert(test_empty_song.get_artist() == "" && test_empty_song.get_year() == 0 && test_empty_song.get_music_id() == "" && test_empty_song.get_genre() == "" && test_empty_song.get_song_name() == "" && test_empty_song.get_song_length() == 0);
+        cout << "Test song default constructor passed" << endl;
+    }
+
+    bool test_get_genre() {
+        ASSERT_TRUE(test_song.get_genre() == "Soul");
+        return true;
+    }
+
+    bool test_get_song_name() {
+        ASSERT_TRUE(test_song.get_song_name() == "Ashes");
+        return true;
+    }
+    bool test_get_song_length() {
+        ASSERT_TRUE(test_song.get_song_length() == 123);
+        return true;
+    }
+
+    //TODO:
+    bool test_operator() {
+        bool is_equal = test_song == Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123)
+    }
+        ASSERT_TRUE()
+};
