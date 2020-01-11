@@ -35,6 +35,13 @@ public:
     string get_artist() {
         return artist_name;
     }
+
+    unsigned int get_year() {
+        return year;
+    }
+    string get_music_id() {
+        return music_id;
+    }
 };
 
 class Song : public Music {
@@ -44,6 +51,7 @@ class Song : public Music {
 
 public:
     Song() {
+        Music;
         genre = "";
         song_name = "";
         song_length = 0;
@@ -56,14 +64,14 @@ public:
         song_length = new_song_length;
     }
 
-    bool operator==( Song& target) { //TODO: how do we implement const in an overloaded operator
+    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
        bool are_equal = true;
        are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
        are_equal = are_equal && genre == target.get_genre();
        are_equal = are_equal && song_name == target.get_song_name();
        are_equal = are_equal && song_length == target.get_song_length();
 
-        return are_equal;
+       return are_equal;
     }
 
     string get_genre() {
@@ -163,8 +171,6 @@ Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
 int main () {
     srand(time(0));
     return 0;
-    MusicTest mc;
-    cout << mc.test_equals();
 };
 
 class MusicTest {
@@ -174,23 +180,81 @@ class MusicTest {
 public:
     void setup() {
        music = Music("Annie", "223", 2020);
-    }
-
-    bool test_default_constructor() {
-        assert(empty_music.get_artist() == "");
-        cout<< "Default empty constructor passed";
     };
 
+    bool test_default_constructor() {
+        assert(empty_music.get_artist() == "" && empty_music.get_music_id() == "" && empty_music.get_year() == 0);
+        return true;
+    };
+
+    bool test_parametric_constructor() {
+        assert(music.get_artist() == "Annie" && music.get_music_id() == "223" && music.get_year() == 2020);
+        return true;
+    };
 
     bool test_equals() {
         Music new_music("Igor", "121", 2018);
         Music same_music("Annie", "223", 2020);
 
         bool equal = music == same_music;
-        bool not_equal = new_music == music;
+        bool not_equal = !(new_music == music);
 
-        assert( equal && !not_equal);
-        cout << "Equals passed";
+        assert( equal && not_equal);
+        return true;
+    };
+
+    bool test_get_artist() {
+        assert(music.get_artist() == "Annie");
+        return true;
+    };
+
+    bool test_get_music_id() {
+        assert(music.get_music_id() == "223");
+        return true;
+    };
+
+    bool test_get_year() {
+        assert(music.get_year() == 2020);
+        return true;
     }
 };
 
+class SongTest {
+    Song test_empty_song;
+    Song test_song;
+
+public:
+    void setup() {
+        test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+    }
+
+    bool test_default_constructor() {
+        assert(test_empty_song.get_artist() == "" && test_empty_song.get_year() == 0 && test_empty_song.get_music_id() == "" && test_empty_song.get_genre() == "" && test_empty_song.get_song_name() == "" && test_empty_song.get_song_length() == 0);
+        cout << "Test song default constructor passed" << endl;
+    }
+
+    bool test_get_genre() {
+//        ASSERT_TRUE(test_song.get_genre() == "Soul");
+        return true;
+    }
+
+    bool test_get_song_name() {
+//        ASSERT_TRUE(test_song.get_song_name() == "Ashes");
+        return true;
+    }
+    bool test_get_song_length() {
+//        ASSERT_TRUE(test_song.get_song_length() == 123);
+        return true;
+    }
+
+    //TODO:
+    bool test_operator() {
+//        bool is_equal = test_song == Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123)
+    }
+//        ASSERT_TRUE()
+};
+
+
+class PlaylistTest() {
+
+}
