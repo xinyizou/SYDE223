@@ -121,6 +121,10 @@ public:
         return shuffled_playlist;
     }
 
+    vector<Song> get_my_playlist() {
+        return my_playlist;
+    }
+
 private:
     bool is_valid(vector<Song>& my_playlist, Song& song_info) {
         int artist_count = 0;
@@ -160,6 +164,58 @@ Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
 //TODO: ask if using insert is ok if not use a for loop to popback each element of second vector
     return combined_playlist;
 }
+
+
+int main () {
+    srand(time(0));
+    return 0;
+};
+
+class MusicTest {
+    Music music;
+    Music empty_music;
+
+public:
+    void setup() {
+       music = Music("Annie", "223", 2020);
+    };
+
+    bool test_default_constructor() {
+        assert(empty_music.get_artist() == "" && empty_music.get_music_id() == "" && empty_music.get_year() == 0);
+        return true;
+    };
+
+    bool test_parametric_constructor() {
+        assert(music.get_artist() == "Annie" && music.get_music_id() == "223" && music.get_year() == 2020);
+        return true;
+    };
+
+    bool test_equals() {
+        Music new_music("Igor", "121", 2018);
+        Music same_music("Annie", "223", 2020);
+
+        bool equal = music == same_music;
+        bool not_equal = !(new_music == music);
+
+        assert( equal && not_equal);
+        return true;
+    };
+
+    bool test_get_artist() {
+        assert(music.get_artist() == "Annie");
+        return true;
+    };
+
+    bool test_get_music_id() {
+        assert(music.get_music_id() == "223");
+        return true;
+    };
+
+    bool test_get_year() {
+        assert(music.get_year() == 2020);
+        return true;
+    }
+};
 
 class SongTest {
     Song test_empty_song;
@@ -217,6 +273,25 @@ public:
         tear_down();
     }
 };
+
+class PlaylistTest() {
+
+Playlist empty_playlist;
+Playlist playlist;
+
+public:
+void setup() {
+    playlist.insert_song(test_song);
+}
+
+bool test_empty_constructor() {
+    Playlist test_playlist;
+    assert(empty_playlist.get_my_playlist() == test_playlist);
+    return true;
+};
+
+}
+
 
 class ConcatenatePlaylistTest {
     Song song;
