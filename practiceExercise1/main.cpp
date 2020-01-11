@@ -176,34 +176,74 @@ int main () {
 class SongTest {
     Song test_empty_song;
     Song test_song;
+    Song same_song;
+    Song different_song;
 
 public:
     void setup() {
         test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+        same_song = Song("Michael Jackson", 1980, "456def", "Pop", "Smooth Criminal", 456);
+    }
+
+    bool test_get_genre() {
+        assert(test_song.get_genre() == "Soul");
+        return true;
+    }
+    bool test_get_song_name() {
+        assert(test_song.get_song_name() == "Ashes");
+        return true;
+    }
+    bool test_get_song_length() {
+        assert(test_song.get_song_length() == 123);
+        return true;
     }
 
     bool test_default_constructor() {
         assert(test_empty_song.get_artist() == "" && test_empty_song.get_year() == 0 && test_empty_song.get_music_id() == "" && test_empty_song.get_genre() == "" && test_empty_song.get_song_name() == "" && test_empty_song.get_song_length() == 0);
-        cout << "Test song default constructor passed" << endl;
+        return true;
     }
-
-    bool test_get_genre() {
-        ASSERT_TRUE(test_song.get_genre() == "Soul");
+    bool test_parametric_constructor() {
+        assert(test_song.get_artist() == "Celine Dion" && test_song.get_year() == 2020 && test_song.get_music_id() == "!23abc" && test_song.get_genre() == "Soul" && test_song.get_song_name() == "Ashes" && test_song.get_song_length() == 123);
         return true;
     }
 
-    bool test_get_song_name() {
-        ASSERT_TRUE(test_song.get_song_name() == "Ashes");
-        return true;
-    }
-    bool test_get_song_length() {
-        ASSERT_TRUE(test_song.get_song_length() == 123);
-        return true;
-    }
-
-    //TODO:
     bool test_operator() {
-        bool is_equal = test_song == Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123)
+        bool is_equal = test_song == same_song;
+        bool not_equal = test_song == different_song;
+        assert(is_equal == true);
+        assert(not_equal == true);
+        return true;
     }
-        ASSERT_TRUE()
+
+    void tear_down() {}
+
+    void run_test() {
+        setup();
+        cout << (test_get_genre() ? "Test Get Genre Passed" : "Test Get Genre Failed") << endl;
+        cout << (test_get_song_name() ? "Test Get Song Name Passed" : "Test Get Song Name Failed") << endl;
+        cout << (test_get_song_length() ? "Test Get Song Length Passed" : "Test Get Song Length Failed") << endl;
+        cout << (test_default_constructor() ? "Test Default Constructor Passed" : "Test Default Constructor Failed") << endl;
+        cout << (test_parametric_constructor() ? "Test Parametric Constructor Passed" : "Test Parametric Constructor Failed") << endl;
+        tear_down();
+    }
+};
+
+class ConcatenatePlaylistTest {
+    Playlist playlist1;
+    Playlist playlist2;
+
+public:
+    void setup() {
+
+    }
+
+    bool testConcatentation() {
+
+    }
+
+    void tear_down() {}
+    void run_test() {
+        setup();
+        cout << (testConcatentation() ? )
+    }
 };
