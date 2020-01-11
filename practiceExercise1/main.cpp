@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <cassert>
 using namespace std;
 
 class Music {
@@ -162,5 +163,34 @@ Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
 int main () {
     srand(time(0));
     return 0;
+    MusicTest mc;
+    cout << mc.test_equals();
+};
+
+class MusicTest {
+    Music music;
+    Music empty_music;
+
+public:
+    void setup() {
+       music = Music("Annie", "223", 2020);
+    }
+
+    bool test_default_constructor() {
+        assert(empty_music.get_artist() == "");
+        cout<< "Default empty constructor passed";
+    };
+
+
+    bool test_equals() {
+        Music new_music("Igor", "121", 2018);
+        Music same_music("Annie", "223", 2020);
+
+        bool equal = music == same_music;
+        bool not_equal = new_music == music;
+
+        assert( equal && !not_equal);
+        cout << "Equals passed";
+    }
 };
 
