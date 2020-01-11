@@ -23,12 +23,13 @@ public:
         year = new_year;
     }
 
-    bool operator==(const Music& target) {
+    bool operator == (const Music& target) const{
         bool is_same = true;
         is_same = is_same && (artist_name == target.artist_name);
         is_same = is_same && (music_id == target.music_id);
         is_same = is_same && (year == target.year);
         return is_same;
+
     }
 
     //TODO: look up constant member function and constant parameters
@@ -51,7 +52,6 @@ class Song : public Music {
 
 public:
     Song() {
-        Music;
         genre = "";
         song_name = "";
         song_length = 0;
@@ -64,24 +64,25 @@ public:
         song_length = new_song_length;
     }
 
-    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
-       bool are_equal = true;
-       are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
-       are_equal = are_equal && genre == target.get_genre();
-       are_equal = are_equal && song_name == target.get_song_name();
-       are_equal = are_equal && song_length == target.get_song_length();
 
-       return are_equal;
-    }
-
-    string get_genre() {
+    const string get_genre() {
         return genre;
     }
-    string get_song_name() {
+    const string get_song_name() {
         return song_name;
     }
-    unsigned int get_song_length() {
+    const unsigned int get_song_length() {
         return song_length;
+    }
+
+    bool operator == (const Song& target) const{ //TODO: how do we implement const in an overloaded operator
+        bool are_equal = true;
+        are_equal = are_equal && (static_cast<Music>(*this) == static_cast<Music>(target) );
+        are_equal = are_equal && (genre == target.genre);
+        are_equal = are_equal && (song_name == target.song_name);
+        are_equal = are_equal && (song_length == target.song_length);
+
+        return are_equal;
     }
 };
 
@@ -109,22 +110,27 @@ public:
 
     Playlist shuffle_songs() {
 
-        vector<int> new_order;
-        Playlist shuffled_playlist;
+        if(my_playlist.size() > 1) {
+            vector<int> new_order;
+            Playlist shuffled_playlist;
 
-        for(int i=0; new_order.size() < my_playlist.size(); i++ ) {
-            int random = rand() % my_playlist.size();
+            for(int i=0; new_order.size() < my_playlist.size(); i++ ) {
+                int random = rand() % my_playlist.size();
 
-            if(is_random(random, new_order)) {
-                new_order.push_back(random);
+                if(is_random(random, new_order)) {
+                    new_order.push_back(random);
+                }
             }
+
+            for(vector<int>::iterator my_it = new_order.begin(); my_it != new_order.end(); ++my_it) {
+                shuffled_playlist.insert_song(my_playlist[*my_it]);
+            }
+
+            return shuffled_playlist;
+        } else {
+            return my_playlist;
         }
 
-        for(vector<int>::iterator my_it = new_order.begin(); my_it != new_order.end(); ++my_it) {
-            shuffled_playlist.insert_song(my_playlist[*my_it]);
-        }
-
-        return shuffled_playlist;
     }
 
     vector<Song> get_my_playlist() {
@@ -174,8 +180,10 @@ Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
 
 int main () {
     srand(time(0));
+
     return 0;
 };
+
 
 class MusicTest {
     Music music;
@@ -234,7 +242,7 @@ public:
 
     bool test_default_constructor() {
         assert(test_empty_song.get_artist() == "" && test_empty_song.get_year() == 0 && test_empty_song.get_music_id() == "" && test_empty_song.get_genre() == "" && test_empty_song.get_song_name() == "" && test_empty_song.get_song_length() == 0);
-        cout << "Test song default constructor passed" << endl;
+        return true;
     }
 
     bool test_get_genre() {
@@ -254,25 +262,82 @@ public:
     //TODO:
     bool test_operator() {
 //        bool is_equal = test_song == Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123)
+        return true;
     }
 //        ASSERT_TRUE()
 };
 
 
-class PlaylistTest() {
+class PlaylistTest {
 
     Playlist empty_playlist;
     Playlist playlist;
+    Song test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+
 
 public:
     void setup() {
         playlist.insert_song(test_song);
     }
 
-    bool test_empty_constructor() {
-        Playlist test_playlist;
-        assert(empty_playlist.get_my_playlist() == test_playlist);
+    bool test_default_constructor() {
+
+        vector<Song> empty;
+
+        assert(empty_playlist.get_my_playlist() == empty);
         return true;
     };
 
-}
+    bool test_parametric_constructor() {
+        vector<Song> songs;
+        songs.push_back(test_song);
+        Playlist parametric_playlist(songs);
+
+//        assert(parametric_playlist.get_my_playlist() == songs);
+        return true;
+    }
+
+    bool test_insert_song() {
+        Song duplicate_song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+        Song artist_song_1("Annie", 2020, "1", "Soul", "Ashes", 1);
+        Song artist_song_2("Annie", 2020, "2", "Soul", "Ashes", 2);
+        Song artist_song_3("Annie", 2020, "3", "Soul", "Ashes", 3);
+        Song artist_song_4("Annie", 2020, "4", "Soul", "Ashes", 4);
+
+        assert( !(playlist.insert_song(duplicate_song)));
+        assert(playlist.insert_song(artist_song_1) && playlist.insert_song(artist_song_2) && playlist.insert_song(artist_song_3) && !(playlist.insert_song(artist_song_4)));
+
+        return true;
+
+    }
+
+    bool test_shuffle_song() {
+
+        Playlist shuffled_playlist = playlist.shuffle_songs();
+
+        int matches = 0;
+
+        for (int i = 0; i < playlist.get_my_playlist().size(); ++i) {
+            if (shuffled_playlist.get_my_playlist()[i] == playlist.get_my_playlist()[i]) {
+                matches++;
+            }
+        }
+
+        assert(matches != shuffled_playlist.get_my_playlist().size());
+        return true;
+
+    }
+
+    bool test_get_playlist() {
+
+        Song new_song = Song("Adele", 2020, "123abc", "Soul", "Ashes", 123);
+
+        playlist.insert_song(new_song);
+
+        assert(playlist.get_my_playlist()[playlist.get_my_playlist().size() - 1] == new_song);
+        return true;
+    }
+
+};
+
+
