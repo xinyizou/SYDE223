@@ -3,6 +3,7 @@
 #include <vector>
 #include <time.h>
 #include <cassert>
+#include <limits>
 using namespace std;
 
 class Music {
@@ -51,18 +52,12 @@ class Song : public Music {
 
 public:
     Song() {
-        Music;
         genre = "";
         song_name = "";
         song_length = 0;
     }
 
-    Song(string new_artist_name, unsigned int new_year, string new_music_id, string new_genre, string new_song_name, unsigned int new_song_length) {
-        Music(new_artist_name, new_music_id, new_year);
-        genre = new_genre;
-        song_name = new_song_name;
-        song_length = new_song_length;
-    }
+    Song(Music new_music, string new_genre, string new_song_name, unsigned int new_song_length) : Music(new_music), genre(new_genre), song_name(new_song_name), song_length(new_song_length) { }
 
     bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
        bool are_equal = true;
@@ -84,7 +79,6 @@ public:
         return song_length;
     }
 };
-
 
 class Playlist {
     vector<Song> my_playlist;
@@ -167,12 +161,6 @@ Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
     return combined_playlist;
 }
 
-
-int main () {
-    srand(time(0));
-    return 0;
-};
-
 class SongTest {
     Song test_empty_song;
     Song test_song;
@@ -181,8 +169,9 @@ class SongTest {
 
 public:
     void setup() {
-        test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
-        same_song = Song("Michael Jackson", 1980, "456def", "Pop", "Smooth Criminal", 456);
+        test_song = Song(Music("Celine Dion", "123abc", 2020), "Soul", "Ashes", 123);
+        same_song = test_song;
+        different_song = Song(Music("Michael Jackson", "456def", 1980),"Pop", "Smooth Criminal", 456);
     }
 
     bool test_get_genre() {
@@ -203,7 +192,7 @@ public:
         return true;
     }
     bool test_parametric_constructor() {
-        assert(test_song.get_artist() == "Celine Dion" && test_song.get_year() == 2020 && test_song.get_music_id() == "!23abc" && test_song.get_genre() == "Soul" && test_song.get_song_name() == "Ashes" && test_song.get_song_length() == 123);
+        assert(test_song.get_artist() == "Celine Dion" && test_song.get_year() == 2020 && test_song.get_music_id() == "123abc" && test_song.get_genre() == "Soul" && test_song.get_song_name() == "Ashes" && test_song.get_song_length() == 123);
         return true;
     }
 
@@ -211,7 +200,7 @@ public:
         bool is_equal = test_song == same_song;
         bool not_equal = test_song == different_song;
         assert(is_equal == true);
-        assert(not_equal == true);
+        assert(not_equal == false);
         return true;
     }
 
@@ -224,26 +213,64 @@ public:
         cout << (test_get_song_length() ? "Test Get Song Length Passed" : "Test Get Song Length Failed") << endl;
         cout << (test_default_constructor() ? "Test Default Constructor Passed" : "Test Default Constructor Failed") << endl;
         cout << (test_parametric_constructor() ? "Test Parametric Constructor Passed" : "Test Parametric Constructor Failed") << endl;
+        cout << (test_operator() ? "Test Operator== Passed" : "Test Operator== Failed") << endl;
         tear_down();
     }
 };
 
 class ConcatenatePlaylistTest {
+    Song song;
     Playlist playlist1;
     Playlist playlist2;
+    Playlist concat_playlist;
 
 public:
     void setup() {
-
+        vector<Song> new_playlist1(3, song);
+        vector<Song> new_playlist2(5, song);
+        playlist1 = Playlist(new_playlist1);
+        playlist2 = Playlist(new_playlist2);
     }
 
     bool testConcatentation() {
-
+        concat_playlist = playlist1 + playlist2;
+        assert(concat_playlist.my_playlist.size() == playlist1.my_playlist.size() + playlist2.my_playlist.size());
+        return true;
     }
 
     void tear_down() {}
+
     void run_test() {
         setup();
-        cout << (testConcatentation() ? )
+        cout << (testConcatentation() ? "Test Operator+ Passed" : "Test Operator+ Failed") << endl;
+        tear_down();
     }
+};
+
+int main () {
+    srand(time(0));
+
+    cout << "Testing" << endl;
+    SongTest st;
+    st.run_test();
+    ConcatenatePlaylistTest cpt;
+    cpt.run_test();
+
+    cout << "\nProgram is ready" << endl;
+    bool exit = false;
+    int command = 0;
+    do {
+        cout << "Enter a command.\n1 = insert a song\n2 = shuffle playlist\nEnter 9 to exit" << endl;
+
+        while(!(cin >> command)){
+            cout << "Bad value!";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+    while(command != 9);
+
+    cout << "Program exited" << endl;
+
+    return 0;
 };

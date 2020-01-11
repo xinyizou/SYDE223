@@ -3,4 +3,4 @@ project(test)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(test main.cpp practiceExercise1/main.cpp practiceExercise1/main.hpp)
+add_executable(test practiceExercise1/main.cpp practiceExercise1/main.cpp practiceExercise1/main.hpp)
