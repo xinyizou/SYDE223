@@ -127,6 +127,10 @@ public:
         return shuffled_playlist;
     }
 
+    vector<Song> get_my_playlist() {
+        return my_playlist;
+    }
+
 private:
     bool is_valid(vector<Song>& my_playlist, Song& song_info) {
         int artist_count = 0;
@@ -256,5 +260,19 @@ public:
 
 
 class PlaylistTest() {
+
+    Playlist empty_playlist;
+    Playlist playlist;
+
+public:
+    void setup() {
+        playlist.insert_song(test_song);
+    }
+
+    bool test_empty_constructor() {
+        Playlist test_playlist;
+        assert(empty_playlist.get_my_playlist() == test_playlist);
+        return true;
+    };
 
 }
