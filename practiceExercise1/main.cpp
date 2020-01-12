@@ -350,13 +350,17 @@ public:
     }
 
 //    bool shuffle empty playlist, shuffle 1 song playlist, shuffle concat playlist, insert song into concat playlist, concat empty playlist
-    bool test_insert_after_shuffle() {
-
+    bool test_shuffle_after_insert() {
+        Song song = Song(Music("Abba", "123", 1980), "Disco", "Waterloo", 789);
+        playlist.insert_song(song);
+        test_shuffle_song();
         return true;
     }
 
-    bool test_shuffle_after_insert() {
-
+    bool test_insert_after_shuffle() {
+        test_shuffle_song();
+        Song song = Song(Music("Queen", "123", 1970), "Pop", "King", 147);
+        test_insert_song();
         return true;
     }
 
