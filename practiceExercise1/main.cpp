@@ -24,7 +24,7 @@ public:
         year = new_year;
     }
 
-    bool operator==(const Music& target) {
+    bool operator==(const Music& target) const{
         bool is_same = true;
         is_same = is_same && (artist_name == target.artist_name);
         is_same = is_same && (music_id == target.music_id);
@@ -59,12 +59,12 @@ public:
 
     Song(Music new_music, string new_genre, string new_song_name, unsigned int new_song_length) : Music(new_music), genre(new_genre), song_name(new_song_name), song_length(new_song_length) { }
 
-    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
+    bool operator==(const Song& target) const{ //TODO: how do we implement const in an overloaded operator
        bool are_equal = true;
-       are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
-       are_equal = are_equal && genre == target.get_genre();
-       are_equal = are_equal && song_name == target.get_song_name();
-       are_equal = are_equal && song_length == target.get_song_length();
+       are_equal = are_equal && (static_cast<Music>(*this) == static_cast<Music>(target));
+       are_equal = are_equal && (genre == target.genre);
+       are_equal = are_equal && (song_name == target.song_name);
+       are_equal = are_equal && (song_length == target.song_length);
 
        return are_equal;
     }
@@ -216,6 +216,7 @@ public:
     }
 };
 
+// TODO: do we need different scenarios for music like ==same artist different genre
 class SongTest {
     Song test_empty_song;
     Song test_song;
@@ -277,7 +278,7 @@ class PlaylistTest {
 
     Playlist empty_playlist;
     Playlist playlist;
-    Song test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+    Song test_song = Song(Music("Celine Dion", "123abc", 2020),"Soul", "Ashes", 123);
 
 
 public:
@@ -303,11 +304,11 @@ public:
     }
 
     bool test_insert_song() {
-        Song duplicate_song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
-        Song artist_song_1("Annie", 2020, "1", "Soul", "Ashes", 1);
-        Song artist_song_2("Annie", 2020, "2", "Soul", "Ashes", 2);
-        Song artist_song_3("Annie", 2020, "3", "Soul", "Ashes", 3);
-        Song artist_song_4("Annie", 2020, "4", "Soul", "Ashes", 4);
+        Song duplicate_song(Music("Celine Dion", "123abc", 2020), "Soul", "Ashes", 123);
+        Song artist_song_1(Music("Annie", "1", 2020), "Soul", "Ashes", 1);
+        Song artist_song_2(Music("Annie", "2", 2020), "Soul", "Ashes", 2);
+        Song artist_song_3(Music("Annie", "3", 2020), "Soul", "Ashes", 3);
+        Song artist_song_4(Music("Annie", "4", 2020), "Soul", "Ashes", 4);
 
         assert( !(playlist.insert_song(duplicate_song)));
         assert(playlist.insert_song(artist_song_1) && playlist.insert_song(artist_song_2) && playlist.insert_song(artist_song_3) && !(playlist.insert_song(artist_song_4)));
@@ -333,9 +334,20 @@ public:
 
     }
 
+//    bool shuffle empty playlist, shuffle 1 song playlist, shuffle concat playlist, insert song into concat playlist, concat empty playlist
+    bool test_insert_after_shuffle() {
+
+        return true;
+    }
+
+    bool test_shuffle_after_insert() {
+
+        return true;
+    }
+
     bool test_get_playlist() {
 
-        Song new_song = Song("Adele", 2020, "123abc", "Soul", "Ashes", 123);
+        Song new_song = Song(Music("Adele", "123abc", 2020), "Soul", "Ashes", 123);
 
         playlist.insert_song(new_song);
 
