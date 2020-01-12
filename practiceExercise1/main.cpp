@@ -24,7 +24,7 @@ public:
         year = new_year;
     }
 
-    bool operator==(const Music& target) {
+    bool operator==(const Music &target) const{
         bool is_same = true;
         is_same = is_same && (artist_name == target.artist_name);
         is_same = is_same && (music_id == target.music_id);
@@ -57,24 +57,31 @@ public:
         song_length = 0;
     }
 
-    Song(Music new_music, string new_genre, string new_song_name, unsigned int new_song_length) : Music(new_music), genre(new_genre), song_name(new_song_name), song_length(new_song_length) { }
+    Song(Music new_music, string new_genre, string new_song_name, unsigned int new_song_length) : Music(new_music),
+                                                                                                  genre(new_genre),
+                                                                                                  song_name(
+                                                                                                          new_song_name),
+                                                                                                  song_length(
+                                                                                                          new_song_length) {}
 
-    bool operator==(Song& target) { //TODO: how do we implement const in an overloaded operator
-       bool are_equal = true;
-       are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
-       are_equal = are_equal && genre == target.get_genre();
-       are_equal = are_equal && song_name == target.get_song_name();
-       are_equal = are_equal && song_length == target.get_song_length();
+    bool operator==(const Song &target) const{ //TODO: how do we implement const in an overloaded operator
+        bool are_equal = true;
+        are_equal = are_equal && (static_cast<Music>(target) == static_cast<Music>(*this));
+        are_equal = are_equal && genre == target.genre;
+        are_equal = are_equal && song_name == target.song_name;
+        are_equal = are_equal && song_length == target.song_length;
 
-       return are_equal;
+        return are_equal;
     }
 
     string get_genre() {
         return genre;
     }
+
     string get_song_name() {
         return song_name;
     }
+
     unsigned int get_song_length() {
         return song_length;
     }
@@ -214,6 +221,21 @@ public:
         assert(music.get_year() == 2020);
         return true;
     }
+
+    void tear_down() {}
+
+    void run_test() {
+        setup();
+        cout << (test_get_artist() ? "Test Get Artist Passed" : "Test Get Artist Failed") << endl;
+        cout << (test_get_music_id() ? "Test Get Music Id Passed" : "Test Get Music Id Failed") << endl;
+        cout << (test_get_year() ? "Test Get Year Passed" : "Test Get Year Failed") << endl;
+        cout << (test_default_constructor() ? "Test Default Constructor Passed" : "Test Default Constructor Failed")
+             << endl;
+        cout << (test_parametric_constructor() ? "Test Parametric Constructor Passed"
+                                               : "Test Parametric Constructor Failed") << endl;
+        cout << (test_equals() ? "Test Equals Operator== Passed" : "Test Equals Operator== Failed") << endl;
+        tear_down();
+    }
 };
 
 class SongTest {
@@ -226,7 +248,7 @@ public:
     void setup() {
         test_song = Song(Music("Celine Dion", "123abc", 2020), "Soul", "Ashes", 123);
         same_song = test_song;
-        different_song = Song(Music("Michael Jackson", "456def", 1980),"Pop", "Smooth Criminal", 456);
+        different_song = Song(Music("Michael Jackson", "456def", 1980), "Pop", "Smooth Criminal", 456);
     }
 
     bool test_get_genre() {
@@ -243,19 +265,23 @@ public:
     }
 
     bool test_default_constructor() {
-        assert(test_empty_song.get_artist() == "" && test_empty_song.get_year() == 0 && test_empty_song.get_music_id() == "" && test_empty_song.get_genre() == "" && test_empty_song.get_song_name() == "" && test_empty_song.get_song_length() == 0);
+        assert(test_empty_song.get_artist() == "" && test_empty_song.get_year() == 0 &&
+               test_empty_song.get_music_id() == "" && test_empty_song.get_genre() == "" &&
+               test_empty_song.get_song_name() == "" && test_empty_song.get_song_length() == 0);
         return true;
     }
+
     bool test_parametric_constructor() {
-        assert(test_song.get_artist() == "Celine Dion" && test_song.get_year() == 2020 && test_song.get_music_id() == "123abc" && test_song.get_genre() == "Soul" && test_song.get_song_name() == "Ashes" && test_song.get_song_length() == 123);
+        assert(test_song.get_artist() == "Celine Dion" && test_song.get_year() == 2020 &&
+               test_song.get_music_id() == "123abc" && test_song.get_genre() == "Soul" &&
+               test_song.get_song_name() == "Ashes" && test_song.get_song_length() == 123);
         return true;
     }
 
     bool test_operator() {
         bool is_equal = test_song == same_song;
         bool not_equal = test_song == different_song;
-        assert(is_equal == true);
-        assert(not_equal == false);
+        assert(is_equal && !not_equal);
         return true;
     }
 
@@ -266,18 +292,20 @@ public:
         cout << (test_get_genre() ? "Test Get Genre Passed" : "Test Get Genre Failed") << endl;
         cout << (test_get_song_name() ? "Test Get Song Name Passed" : "Test Get Song Name Failed") << endl;
         cout << (test_get_song_length() ? "Test Get Song Length Passed" : "Test Get Song Length Failed") << endl;
-        cout << (test_default_constructor() ? "Test Default Constructor Passed" : "Test Default Constructor Failed") << endl;
-        cout << (test_parametric_constructor() ? "Test Parametric Constructor Passed" : "Test Parametric Constructor Failed") << endl;
+        cout << (test_default_constructor() ? "Test Default Constructor Passed" : "Test Default Constructor Failed")
+             << endl;
+        cout << (test_parametric_constructor() ? "Test Parametric Constructor Passed"
+                                               : "Test Parametric Constructor Failed") << endl;
         cout << (test_operator() ? "Test Operator== Passed" : "Test Operator== Failed") << endl;
         tear_down();
-    }
+    };
 };
 
 class PlaylistTest {
 
     Playlist empty_playlist;
     Playlist playlist;
-    Song test_song = Song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
+    Song test_song = Song(Music("Celine Dion", "123abc", 2020), "Soul", "Ashes", 123);
 
 
 public:
@@ -303,11 +331,11 @@ public:
     }
 
     bool test_insert_song() {
-        Song duplicate_song("Celine Dion", 2020, "123abc", "Soul", "Ashes", 123);
-        Song artist_song_1("Annie", 2020, "1", "Soul", "Ashes", 1);
-        Song artist_song_2("Annie", 2020, "2", "Soul", "Ashes", 2);
-        Song artist_song_3("Annie", 2020, "3", "Soul", "Ashes", 3);
-        Song artist_song_4("Annie", 2020, "4", "Soul", "Ashes", 4);
+        Song duplicate_song(Music("Celine Dion", "123abc", 2020), "Soul", "Ashes", 123);
+        Song artist_song_1(Music("Annie", "1", 2020), "Soul", "Ashes", 1);
+        Song artist_song_2(Music("Annie", "2", 2020), "Soul", "Ashes", 2);
+        Song artist_song_3(Music("Annie", "3", 2020), "Soul", "Ashes", 3);
+        Song artist_song_4(Music("Annie", "4", 2020), "Soul", "Ashes", 4);
 
         assert( !(playlist.insert_song(duplicate_song)));
         assert(playlist.insert_song(artist_song_1) && playlist.insert_song(artist_song_2) && playlist.insert_song(artist_song_3) && !(playlist.insert_song(artist_song_4)));
@@ -335,7 +363,7 @@ public:
 
     bool test_get_playlist() {
 
-        Song new_song = Song("Adele", 2020, "123abc", "Soul", "Ashes", 123);
+        Song new_song = Song(Music("Adele","123abc", 2020), "Soul", "Ashes", 123);
 
         playlist.insert_song(new_song);
 
@@ -359,9 +387,10 @@ public:
         playlist2 = Playlist(new_playlist2);
     }
 
-    bool testConcatentation() {
+    bool test_concatentation() {
         concat_playlist = playlist1 + playlist2;
-        assert(concat_playlist.get_my_playlist().size() == playlist1.get_my_playlist().size() + playlist2.get_my_playlist().size());
+        assert(concat_playlist.get_my_playlist().size() ==
+               playlist1.get_my_playlist().size() + playlist2.get_my_playlist().size());
         return true;
     }
 
@@ -369,15 +398,17 @@ public:
 
     void run_test() {
         setup();
-        cout << (testConcatentation() ? "Test Operator+ Passed" : "Test Operator+ Failed") << endl;
+        cout << (test_concatentation() ? "Test Operator+ Passed" : "Test Operator+ Failed") << endl;
         tear_down();
     }
 };
 
-int main () {
+int main() {
     srand(time(0));
 
     cout << "Testing" << endl;
+    MusicTest mt;
+    mt.run_test();
     SongTest st;
     st.run_test();
     ConcatenatePlaylistTest cpt;
@@ -389,13 +420,12 @@ int main () {
     do {
         cout << "Enter a command.\n1 = insert a song\n2 = shuffle playlist\nEnter 9 to exit" << endl;
 
-        while(!(cin >> command)){
+        while (!(cin >> command)) {
             cout << "Bad value!";
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
-    }
-    while(command != 9);
+    } while (command != 9);
 
     cout << "Program exited" << endl;
 
