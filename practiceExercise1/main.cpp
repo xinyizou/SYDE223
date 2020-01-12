@@ -374,7 +374,7 @@ public:
     bool test_insert_after_shuffle() {
         test_shuffle_song();
         Song song = Song(Music("Queen", "123", 1970), "Pop", "King", 147);
-        test_insert_song();
+        assert(playlist.insert_song(song));
         return true;
     }
 
@@ -444,6 +444,8 @@ int main() {
     mt.run_test();
     SongTest st;
     st.run_test();
+    PlaylistTest pt;
+    pt.run_test();
     ConcatenatePlaylistTest cpt;
     cpt.run_test();
 
