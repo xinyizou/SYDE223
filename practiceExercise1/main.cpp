@@ -91,10 +91,6 @@ class Playlist {
 public:
     friend Playlist operator+(const Playlist& playlist1, const Playlist& playlist2);
 
-    Playlist () : my_playlist(vector<Song>()){}
-
-    Playlist(vector<Song> new_playlist) : my_playlist(new_playlist) {}
-
     bool insert_song (Song& song_info) {
         if (is_valid(my_playlist, song_info)) {
             my_playlist.push_back(song_info);
@@ -126,13 +122,17 @@ public:
 
             return shuffled_playlist;
         } else {
-            return my_playlist;
+            return *this;
         }
 
     }
 
     vector<Song> get_my_playlist() {
         return my_playlist;
+    }
+
+    void set_my_playlist(vector<Song> new_playlist) {
+        my_playlist.insert(my_playlist.begin(),new_playlist.begin(), new_playlist.end());
     }
 
 private:
@@ -168,10 +168,9 @@ private:
 //TODO: ask about implicit constructor
 
 Playlist operator+(const Playlist& playlist1, const Playlist& playlist2) {
-    vector<Song> combined_playlist;
-    combined_playlist.insert(combined_playlist.end(), playlist1.my_playlist.begin(), playlist1.my_playlist.end());
-    combined_playlist.insert(combined_playlist.end(), playlist2.my_playlist.begin(), playlist2.my_playlist.end());
-//TODO: ask if using insert is ok if not use a for loop to popback each element of second vector
+    Playlist combined_playlist;
+    combined_playlist.my_playlist.insert(combined_playlist.my_playlist.end(), playlist1.my_playlist.begin(), playlist1.my_playlist.end());
+    combined_playlist.my_playlist.insert(combined_playlist.my_playlist.end(), playlist2.my_playlist.begin(), playlist2.my_playlist.end());
     return combined_playlist;
 }
 
@@ -315,22 +314,6 @@ public:
         playlist.insert_song(test_song);
     }
 
-    bool test_default_constructor() {
-
-        vector<Song> empty;
-
-        assert(empty_playlist.get_my_playlist() == empty);
-        return true;
-    };
-
-    bool test_parametric_constructor() {
-        vector<Song> songs;
-        songs.push_back(test_song);
-        Playlist parametric_playlist(songs);
-
-//        assert(parametric_playlist.get_my_playlist() == songs);
-        return true;
-    }
 
     bool test_insert_song() {
         Song duplicate_song(Music("Celine Dion", "123abc", 2020), "Soul", "Ashes", 123);
@@ -388,6 +371,18 @@ public:
         return true;
     };
 
+    bool test_set_playlist() {
+        Playlist new_playlist;
+
+        Song song;
+        vector<Song> new_playlist1(3, song);
+
+        new_playlist.set_my_playlist(new_playlist1);
+
+        assert(new_playlist.get_my_playlist().size() == new_playlist1.size());
+        return true;
+    }
+
 
     void tear_down() {}
 
@@ -395,12 +390,11 @@ public:
         setup();
 
         cout << (test_get_playlist() ? "Test Get Playlist Passed" : "Test Get Playlist Failed") << endl;
+        cout << (test_set_playlist() ? "Test Set Playlist Passed" : "Test Set Playlist Failed") << endl;
         cout << (test_insert_song() ? "Test Insert Song Passed" : "Test Insert Song Failed") << endl;
         cout << (test_shuffle_song() ? "Test Shuffle Song Passed" : "Test Shuffle Song Failed") << endl;
         cout << (test_shuffle_after_insert() ? "Test Shuffle after Insert Passed" : "Test Shuffle after Insert Failed") << endl;
         cout << (test_insert_after_shuffle() ? "Test Insert after Shuffle Passed" : "Test Insert after Shuffle Failed") << endl;
-        cout << (test_default_constructor() ? "Test Default Constructor Passed" : "Test Default Constructor Failed") << endl;
-        cout << (test_parametric_constructor() ? "Test Parametric Constructor Passed" : "Test Parametric Constructor Failed") << endl;
 
         tear_down();
     }
@@ -416,8 +410,8 @@ public:
     void setup() {
         vector<Song> new_playlist1(3, song);
         vector<Song> new_playlist2(5, song);
-        playlist1 = Playlist(new_playlist1);
-        playlist2 = Playlist(new_playlist2);
+        playlist1.set_my_playlist(new_playlist1);
+        playlist2.set_my_playlist(new_playlist2);
     }
 
     bool test_concatenation() {
@@ -448,21 +442,6 @@ int main() {
     pt.run_test();
     ConcatenatePlaylistTest cpt;
     cpt.run_test();
-
-    cout << "\nProgram is ready" << endl;
-    bool exit = false;
-    int command = 0;
-    do {
-        cout << "Enter a command.\n1 = insert a song\n2 = shuffle playlist\nEnter 9 to exit" << endl;
-
-        while (!(cin >> command)) {
-            cout << "Bad value!";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-    } while (command != 9);
-
-    cout << "Program exited" << endl;
 
     return 0;
 };
