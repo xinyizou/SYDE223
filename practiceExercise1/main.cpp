@@ -401,24 +401,38 @@ public:
 };
 
 class ConcatenatePlaylistTest {
-    Song song;
     Playlist playlist1;
     Playlist playlist2;
     Playlist concat_playlist;
+    Playlist manually_concat;
 
 public:
     void setup() {
-        vector<Song> new_playlist1(3, song);
-        vector<Song> new_playlist2(5, song);
-        playlist1.set_my_playlist(new_playlist1);
-        playlist2.set_my_playlist(new_playlist2);
+        Song song1 = Song(Music("Adele", "123abc", 2020), "Soul", "Ashes", 123);
+        Song song2 = Song(Music("Abba", "123", 1980), "Disco", "Waterloo", 789);
+
+        Song song3 = Song(Music("Queen", "123", 1970), "Pop", "King", 147);
+
+        vector<Song> test_playlist{song1, song2, song3};
+
+        manually_concat.set_my_playlist(test_playlist);
+
+        playlist1.insert_song(song1);
+        playlist1.insert_song(song2);
+        playlist2.insert_song(song3);
     }
 
     bool test_concatenation() {
         concat_playlist = playlist1 + playlist2;
         assert(concat_playlist.get_my_playlist().size() ==
                playlist1.get_my_playlist().size() + playlist2.get_my_playlist().size());
-        return true;
+
+        bool is_concat = true;
+
+        for(int i = 0; i < concat_playlist.get_my_playlist().size(); i++) {
+            is_concat = concat_playlist.get_my_playlist().at(i) == manually_concat.get_my_playlist().at(i);
+        }
+        return is_concat;
     }
 
     void tear_down() {}
